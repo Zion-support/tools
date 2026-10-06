@@ -16,20 +16,14 @@ jobs:
       - name: Probe live homepage advertising + key routes
         run: |
           set -euo pipefail
-          # Homepage hero/content rotates; fetch 3x and combine to avoid flakes.
-          # NOTE (2026-10-03): re-aligned with live homepage (post-P0 EN shell).
-          # Removed literal "Automation"/"Case Studies" (not present in current hero);
-          # marketing action pending to restore that copy on the homepage.
-          # NOTE (2026-10-02): expectations re-verified against the live homepage
-          # after the 30/09 P0 restore (EN "recovered-2026-03-19" homepage).
-          # Legacy PT strings and assets/js/zion-catalog.js + data/zion-catalog.json
-          # were retired with the old homepage and removed from this watchdog.
+          # NOTE (2026-10-06): Discovery is free sitewide; remove obsolete paid
+          # Discovery assertion while preserving current production health checks.
           html="$(for i in 1 2 3; do curl -fsSL https://ziontechgroup.com/ || true; sleep 2; done)"
           must=(
             "Zion Tech Group"
             "AI Agents"
             "Discovery"
-            'Discovery $99'
+            "sempre grátis"
             "case-studies"
           )
           fail=0
@@ -67,5 +61,5 @@ jobs:
           if [ "$fail" -ne 0 ]; then
             echo "Watchdog found gaps."
             exit 1
-            fi
-            echo "Watchdog green."
+          fi
+          echo "Watchdog green."
